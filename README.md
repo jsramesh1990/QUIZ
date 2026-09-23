@@ -1,3 +1,3 @@
 ## C Programming — Basics Quiz
 
-👉 [Start Quiz](./quiz/index.html)
+👉 [Start Quiz](./topics/index.html)
