@@ -1,0 +1,10 @@
+{
+    "id": 1,
+    "question": "Which function is the standard entry point of a C program?",
+    "options": [
+        "start()",
+        "init()",
+        "begin()",
+        "main()"
+    ]
+}

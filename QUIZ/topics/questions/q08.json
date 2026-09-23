@@ -1,0 +1,10 @@
+{
+    "id": 8,
+    "question": "What is the purpose of a comment in C source code?",
+    "options": [
+        "To link libraries",
+        "To create a new process",
+        "To allocate memory",
+        "To document or explain code for readers"
+    ]
+}

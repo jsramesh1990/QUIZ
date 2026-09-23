@@ -1,0 +1,10 @@
+{
+    "id": 9,
+    "question": "Which of these is a valid single-line comment syntax in C99 and later?",
+    "options": [
+        "-- comment",
+        "comment",
+        "// comment",
+        "\\ comment"
+    ]
+}
