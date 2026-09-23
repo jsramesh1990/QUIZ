@@ -7,7 +7,7 @@
 // ------------------------------------------------------------
 
 const DATA_BASE_URL =
-    "https://raw.githubusercontent.com/jsramesh1990/C-QUIZ-DATA/main";
+        "https://raw.githubusercontent.com/jsramesh1990/C-QUIZ-DATA/main/C-QUIZ-DATA";
 
 // ------------------------------------------------------------
 // Topic list
