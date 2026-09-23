@@ -1,0 +1,99 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>C Programming Quiz</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="quiz-container">
+
+        <!-- Quiz Header -->
+        <div class="quiz-header">
+            <h1>C Programming Quiz</h1>
+            <p id="topic-title">Ready to start?</p>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen">
+
+            <h2>Test Your C Programming Knowledge</h2>
+
+            <p>
+                Questions are selected randomly from different C programming topics.
+            </p>
+
+            <button id="start-btn" class="btn">
+                Start Quiz
+            </button>
+
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="screen hidden">
+
+            <div class="progress">
+                <span id="question-number">Question 1</span>
+                <span id="score-display">Score: 0</span>
+            </div>
+
+            <div class="question-box">
+
+                <h2 id="question-text">
+                    Question will appear here
+                </h2>
+
+                <div id="options-container">
+                    <!-- Options will be inserted by JavaScript -->
+                </div>
+
+            </div>
+
+            <button id="next-btn" class="btn" disabled>
+                Next
+            </button>
+
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="screen hidden">
+
+            <h2>Quiz Completed!</h2>
+
+            <div class="result-box">
+
+                <p>Your Score</p>
+
+                <div id="final-score">
+                    0 / 0
+                </div>
+
+                <p id="result-message">
+                    Good job!
+                </p>
+
+            </div>
+
+            <button id="restart-btn" class="btn">
+                Restart Quiz
+            </button>
+
+        </div>
+
+        <!-- Loading / Error Message -->
+        <div id="message" class="message hidden"></div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
+```
+
