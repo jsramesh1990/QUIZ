@@ -1,0 +1,10 @@
+{
+    "id": 3,
+    "question": "Which symbol is used to terminate a typical C statement?",
+    "options": [
+        "Colon (:)",
+        "Period (.)",
+        "Comma (,)",
+        "Semicolon (;)"
+    ]
+}

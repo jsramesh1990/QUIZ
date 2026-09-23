@@ -1,0 +1,10 @@
+{
+    "id": 2,
+    "question": "Which header file provides the declaration of printf()?",
+    "options": [
+        "stdio.h",
+        "ctype.h",
+        "string.h",
+        "stdlib.h"
+    ]
+}
