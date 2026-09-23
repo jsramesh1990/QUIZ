@@ -7,7 +7,7 @@
 // ------------------------------------------------------------
 
 const DATA_BASE_URL =
-        "https://raw.githubusercontent.com/jsramesh1990/C-QUIZ-DATA/main/C-QUIZ-DATA";
+    "https://raw.githubusercontent.com/jsramesh1990/C-QUIZ-DATA/main/C-QUIZ-DATA";
 
 // ------------------------------------------------------------
 // Topic list
@@ -57,26 +57,51 @@ let selectedAnswer = null;
 // HTML elements
 // ------------------------------------------------------------
 
-const startScreen = document.getElementById("start-screen");
-const quizScreen = document.getElementById("quiz-screen");
-const resultScreen = document.getElementById("result-screen");
+const startScreen =
+    document.getElementById("start-screen");
 
-const startButton = document.getElementById("start-btn");
-const nextButton = document.getElementById("next-btn");
-const restartButton = document.getElementById("restart-btn");
+const quizScreen =
+    document.getElementById("quiz-screen");
 
-const topicTitle = document.getElementById("topic-title");
+const resultScreen =
+    document.getElementById("result-screen");
 
-const questionNumber = document.getElementById("question-number");
-const scoreDisplay = document.getElementById("score-display");
+const startButton =
+    document.getElementById("start-btn");
 
-const questionText = document.getElementById("question-text");
-const optionsContainer = document.getElementById("options-container");
+const nextButton =
+    document.getElementById("next-btn");
 
-const finalScore = document.getElementById("final-score");
-const resultMessage = document.getElementById("result-message");
+const restartButton =
+    document.getElementById("restart-btn");
 
-const message = document.getElementById("message");
+const topicTitle =
+    document.getElementById("topic-title");
+
+// NEW: Topic learning description
+const topicDescription =
+    document.getElementById("topic-description");
+
+const questionNumber =
+    document.getElementById("question-number");
+
+const scoreDisplay =
+    document.getElementById("score-display");
+
+const questionText =
+    document.getElementById("question-text");
+
+const optionsContainer =
+    document.getElementById("options-container");
+
+const finalScore =
+    document.getElementById("final-score");
+
+const resultMessage =
+    document.getElementById("result-message");
+
+const message =
+    document.getElementById("message");
 
 // ------------------------------------------------------------
 // Check HTML elements
@@ -90,6 +115,7 @@ if (
     !nextButton ||
     !restartButton ||
     !topicTitle ||
+    !topicDescription ||
     !questionNumber ||
     !scoreDisplay ||
     !questionText ||
@@ -98,7 +124,9 @@ if (
     !resultMessage ||
     !message
 ) {
-    console.error("Quiz HTML elements are missing.");
+    console.error(
+        "Quiz HTML elements are missing."
+    );
 }
 
 // ------------------------------------------------------------
@@ -108,12 +136,24 @@ if (
 
 function shuffle(array) {
 
-    for (let i = array.length - 1; i > 0; i--) {
+    for (
+        let i = array.length - 1;
+        i > 0;
+        i--
+    ) {
 
-        const j = Math.floor(Math.random() * (i + 1));
+        const j =
+            Math.floor(
+                Math.random() * (i + 1)
+            );
 
-        [array[i], array[j]] =
-            [array[j], array[i]];
+        [
+            array[i],
+            array[j]
+        ] = [
+            array[j],
+            array[i]
+        ];
     }
 
     return array;
@@ -125,9 +165,13 @@ function shuffle(array) {
 
 async function loadJSON(url) {
 
-    console.log("Loading:", url);
+    console.log(
+        "Loading:",
+        url
+    );
 
-    const response = await fetch(url);
+    const response =
+        await fetch(url);
 
     if (!response.ok) {
 
@@ -147,12 +191,15 @@ async function loadTopics() {
 
     topics = [];
 
-    for (const topicFile of topicFiles) {
+    for (
+        const topicFile of topicFiles
+    ) {
 
         const url =
             `${DATA_BASE_URL}/topics/${topicFile}.json`;
 
-        const topic = await loadJSON(url);
+        const topic =
+            await loadJSON(url);
 
         topics.push(topic);
     }
@@ -160,7 +207,10 @@ async function loadTopics() {
     // Randomize topic order
     shuffle(topics);
 
-    console.log("Topics loaded:", topics);
+    console.log(
+        "Topics loaded:",
+        topics
+    );
 }
 
 // ------------------------------------------------------------
@@ -184,16 +234,40 @@ async function loadTopicQuestions(topicId) {
     const answers =
         answerData.answers;
 
+    if (
+        !questionData.questions ||
+        !Array.isArray(
+            questionData.questions
+        )
+    ) {
+
+        throw new Error(
+            `Invalid questions file for topic: ${topicId}`
+        );
+    }
+
+    if (!answers) {
+
+        throw new Error(
+            `Invalid answers file for topic: ${topicId}`
+        );
+    }
+
     currentQuestions =
-        questionData.questions.map(question => {
+        questionData.questions.map(
+            question => {
 
-            return {
-                ...question,
-                correctAnswer:
-                    answers[String(question.id)]
-            };
+                return {
+                    ...question,
 
-        });
+                    correctAnswer:
+                        answers[
+                            String(question.id)
+                        ]
+                };
+
+            }
+        );
 
     // Randomize question order
     shuffle(currentQuestions);
@@ -212,49 +286,116 @@ async function startQuiz() {
 
     try {
 
-        console.log("Start Quiz clicked.");
+        console.log(
+            "Start Quiz clicked."
+        );
 
-        showMessage("Loading quiz...");
+        showMessage(
+            "Loading quiz..."
+        );
 
+        // ----------------------------------------------------
         // Reset quiz state
+        // ----------------------------------------------------
+
         score = 0;
+
         currentTopicIndex = 0;
+
         currentQuestionIndex = 0;
+
         totalQuestions = 0;
+
         currentQuestions = [];
+
         currentQuestion = null;
+
         selectedAnswer = null;
 
-        // Load all topics
+        // ----------------------------------------------------
+        // Load all 20 topics
+        // ----------------------------------------------------
+
         await loadTopics();
 
-        // Calculate total number of questions
+        // ----------------------------------------------------
+        // Calculate total questions
+        // ----------------------------------------------------
+
         totalQuestions =
             topics.reduce(
-                (total, topic) => total + 10,
+                (
+                    total,
+                    topic
+                ) => {
+
+                    return total + 10;
+
+                },
                 0
             );
 
+        console.log(
+            "Total questions:",
+            totalQuestions
+        );
+
+        // ----------------------------------------------------
         // Hide start/result screens
-        startScreen.classList.add("hidden");
-        resultScreen.classList.add("hidden");
+        // ----------------------------------------------------
 
+        startScreen.classList.add(
+            "hidden"
+        );
+
+        resultScreen.classList.add(
+            "hidden"
+        );
+
+        // ----------------------------------------------------
         // Show quiz screen
-        quizScreen.classList.remove("hidden");
+        // ----------------------------------------------------
 
+        quizScreen.classList.remove(
+            "hidden"
+        );
+
+        // ----------------------------------------------------
         // Hide loading message
+        // ----------------------------------------------------
+
         hideMessage();
 
-        // Reset score display
+        // ----------------------------------------------------
+        // Reset score
+        // ----------------------------------------------------
+
         scoreDisplay.textContent =
             `Score: ${score}`;
 
+        // ----------------------------------------------------
         // Load first topic
+        // ----------------------------------------------------
+
         await loadCurrentTopic();
 
     } catch (error) {
 
-        console.error("Quiz loading error:", error);
+        console.error(
+            "Quiz loading error:",
+            error
+        );
+
+        // Make sure quiz screen doesn't remain
+        // in a broken state.
+
+        quizScreen.classList.add(
+            "hidden"
+        );
+
+        startScreen.classList.remove(
+            "hidden"
+        );
 
         showMessage(
             "Unable to load the quiz. Please check the C-QUIZ-DATA repository and JSON files."
@@ -268,7 +409,10 @@ async function startQuiz() {
 
 async function loadCurrentTopic() {
 
-    if (currentTopicIndex >= topics.length) {
+    if (
+        currentTopicIndex >=
+        topics.length
+    ) {
 
         showResult();
 
@@ -283,14 +427,55 @@ async function loadCurrentTopic() {
         topic
     );
 
+    // --------------------------------------------------------
+    // Display topic title
+    // --------------------------------------------------------
+
     topicTitle.textContent =
-        topic.title;
+        `Topic: ${topic.title}`;
+
+    // --------------------------------------------------------
+    // Display topic learning information
+    // --------------------------------------------------------
+
+    if (
+        topicDescription
+    ) {
+
+        topicDescription.textContent =
+            topic.description || "";
+    }
+
+    // --------------------------------------------------------
+    // Reset question index
+    // --------------------------------------------------------
 
     currentQuestionIndex = 0;
+
+    // --------------------------------------------------------
+    // Load topic questions
+    // --------------------------------------------------------
 
     await loadTopicQuestions(
         topic.id
     );
+
+    // --------------------------------------------------------
+    // Make sure questions exist
+    // --------------------------------------------------------
+
+    if (
+        currentQuestions.length === 0
+    ) {
+
+        throw new Error(
+            `No questions found for topic: ${topic.id}`
+        );
+    }
+
+    // --------------------------------------------------------
+    // Display first question
+    // --------------------------------------------------------
 
     showQuestion();
 }
@@ -306,20 +491,38 @@ function showQuestion() {
     nextButton.disabled = true;
 
     const question =
-        currentQuestions[currentQuestionIndex];
+        currentQuestions[
+            currentQuestionIndex
+        ];
 
-    currentQuestion = question;
+    currentQuestion =
+        question;
+
+    // --------------------------------------------------------
+    // Question text
+    // --------------------------------------------------------
 
     questionText.textContent =
         question.question;
 
+    // --------------------------------------------------------
+    // Question number
+    // --------------------------------------------------------
+
     questionNumber.textContent =
         `Question ${currentQuestionIndex + 1} of ${currentQuestions.length}`;
+
+    // --------------------------------------------------------
+    // Score
+    // --------------------------------------------------------
 
     scoreDisplay.textContent =
         `Score: ${score}`;
 
+    // --------------------------------------------------------
     // Clear previous options
+    // --------------------------------------------------------
+
     optionsContainer.innerHTML = "";
 
     // --------------------------------------------------------
@@ -327,20 +530,25 @@ function showQuestion() {
     // --------------------------------------------------------
 
     let options =
-        question.options.map(option => {
+        question.options.map(
+            option => {
 
-            const originalLetter =
-                option.charAt(0);
+                const originalLetter =
+                    option.charAt(0);
 
-            const optionText =
-                option.substring(2);
+                const optionText =
+                    option.substring(2);
 
-            return {
-                originalLetter: originalLetter,
-                text: optionText
-            };
+                return {
 
-        });
+                    originalLetter:
+                        originalLetter,
+
+                    text:
+                        optionText
+                };
+            }
+        );
 
     // --------------------------------------------------------
     // Randomize options
@@ -352,31 +560,44 @@ function showQuestion() {
     // Create option buttons
     // --------------------------------------------------------
 
-    options.forEach((option, index) => {
+    options.forEach(
+        (
+            option,
+            index
+        ) => {
 
-        const displayLetter =
-            String.fromCharCode(65 + index);
+            const displayLetter =
+                String.fromCharCode(
+                    65 + index
+                );
 
-        const button =
-            document.createElement("button");
+            const button =
+                document.createElement(
+                    "button"
+                );
 
-        button.classList.add("option");
+            button.classList.add(
+                "option"
+            );
 
-        button.textContent =
-            `${displayLetter}. ${option.text}`;
+            button.textContent =
+                `${displayLetter}. ${option.text}`;
 
-        // Store original answer letter
-        button.dataset.answer =
-            option.originalLetter;
+            // Store original answer letter
+            button.dataset.answer =
+                option.originalLetter;
 
-        // Add click event
-        button.addEventListener(
-            "click",
-            () => selectAnswer(button)
-        );
+            // Add click event
+            button.addEventListener(
+                "click",
+                () => selectAnswer(button)
+            );
 
-        optionsContainer.appendChild(button);
-    });
+            optionsContainer.appendChild(
+                button
+            );
+        }
+    );
 }
 
 // ------------------------------------------------------------
@@ -386,7 +607,9 @@ function showQuestion() {
 function selectAnswer(button) {
 
     // Prevent selecting another answer
-    if (selectedAnswer !== null) {
+    if (
+        selectedAnswer !== null
+    ) {
 
         return;
     }
@@ -395,52 +618,79 @@ function selectAnswer(button) {
         button.dataset.answer;
 
     const allOptions =
-        document.querySelectorAll(".option");
+        document.querySelectorAll(
+            ".option"
+        );
 
+    // --------------------------------------------------------
     // Disable all options
-    allOptions.forEach(option => {
+    // --------------------------------------------------------
 
-        option.disabled = true;
+    allOptions.forEach(
+        option => {
 
-    });
+            option.disabled = true;
 
+        }
+    );
+
+    // --------------------------------------------------------
     // Get correct answer
+    // --------------------------------------------------------
+
     const correctAnswer =
         currentQuestion.correctAnswer;
 
+    // --------------------------------------------------------
     // Check selected answer
+    // --------------------------------------------------------
+
     if (
         selectedAnswer ===
         correctAnswer
     ) {
 
-        button.classList.add("correct");
+        button.classList.add(
+            "correct"
+        );
 
         score++;
 
     } else {
 
-        button.classList.add("wrong");
+        button.classList.add(
+            "wrong"
+        );
 
         // Highlight correct answer
-        allOptions.forEach(option => {
+        allOptions.forEach(
+            option => {
 
-            if (
-                option.dataset.answer ===
-                correctAnswer
-            ) {
+                if (
+                    option.dataset.answer ===
+                    correctAnswer
+                ) {
 
-                option.classList.add("correct");
+                    option.classList.add(
+                        "correct"
+                    );
+                }
+
             }
-
-        });
+        );
     }
 
+    // --------------------------------------------------------
     // Update score
+    // --------------------------------------------------------
+
     scoreDisplay.textContent =
         `Score: ${score}`;
 
+    // --------------------------------------------------------
     // Enable Next button
+    // --------------------------------------------------------
+
     nextButton.disabled = false;
 }
 
@@ -483,7 +733,13 @@ async function nextQuestion() {
 
         try {
 
+            showMessage(
+                "Loading next topic..."
+            );
+
             await loadCurrentTopic();
+
+            hideMessage();
 
         } catch (error) {
 
@@ -513,32 +769,58 @@ async function nextQuestion() {
 
 function showResult() {
 
-    quizScreen.classList.add("hidden");
+    quizScreen.classList.add(
+        "hidden"
+    );
 
-    resultScreen.classList.remove("hidden");
+    resultScreen.classList.remove(
+        "hidden"
+    );
 
     topicTitle.textContent =
         "Quiz Finished";
 
+    if (topicDescription) {
+
+        topicDescription.textContent =
+            "";
+    }
+
     finalScore.textContent =
         `${score} / ${totalQuestions}`;
 
-    const percentage =
-        Math.round(
-            (score / totalQuestions) * 100
-        );
+    let percentage = 0;
 
-    if (percentage >= 80) {
+    if (
+        totalQuestions > 0
+    ) {
+
+        percentage =
+            Math.round(
+                (
+                    score /
+                    totalQuestions
+                ) * 100
+            );
+    }
+
+    if (
+        percentage >= 80
+    ) {
 
         resultMessage.textContent =
             `Excellent! You scored ${percentage}%.`;
 
-    } else if (percentage >= 60) {
+    } else if (
+        percentage >= 60
+    ) {
 
         resultMessage.textContent =
             `Good job! You scored ${percentage}%.`;
 
-    } else if (percentage >= 40) {
+    } else if (
+        percentage >= 40
+    ) {
 
         resultMessage.textContent =
             `Keep practicing! You scored ${percentage}%.`;
@@ -556,7 +838,13 @@ function showResult() {
 
 async function restartQuiz() {
 
-    resultScreen.classList.add("hidden");
+    resultScreen.classList.add(
+        "hidden"
+    );
+
+    startScreen.classList.remove(
+        "hidden"
+    );
 
     await startQuiz();
 }
@@ -570,7 +858,9 @@ function showMessage(text) {
     message.textContent =
         text;
 
-    message.classList.remove("hidden");
+    message.classList.remove(
+        "hidden"
+    );
 }
 
 // ------------------------------------------------------------
@@ -579,7 +869,9 @@ function showMessage(text) {
 
 function hideMessage() {
 
-    message.classList.add("hidden");
+    message.classList.add(
+        "hidden"
+    );
 }
 
 // ------------------------------------------------------------
