@@ -8,7 +8,8 @@
 // ------------------------------------------------------------
 
 const DATA_BASE_URL =
-    "https://raw.githubusercontent.com/jsramesh1990/C-QUIZ-DATA/main";
+  //  "https://raw.githubusercontent.com/jsramesh1990/C-QUIZ-DATA/main";
+    "https://raw.githubusercontent.com/jsramesh1990/C-QUIZ-DATA/main/questions/c-basics.json";
 
 // ------------------------------------------------------------
 // Topic list
