@@ -17,8 +17,13 @@
         <!-- Quiz Header -->
         <div class="quiz-header">
             <h1>C Programming Quiz</h1>
-            <p id="topic-title">Ready to start?</p>
+
+            <!-- Topic Information -->
+            <h2 id="topic-title">Ready to start?</h2>
+
+            <p id="topic-description"></p>
         </div>
+
 
         <!-- Start Screen -->
         <div id="start-screen" class="screen">
@@ -35,14 +40,18 @@
 
         </div>
 
+
         <!-- Quiz Screen -->
         <div id="quiz-screen" class="screen hidden">
 
+            <!-- Progress -->
             <div class="progress">
                 <span id="question-number">Question 1</span>
                 <span id="score-display">Score: 0</span>
             </div>
 
+
+            <!-- Question -->
             <div class="question-box">
 
                 <h2 id="question-text">
@@ -55,11 +64,14 @@
 
             </div>
 
+
+            <!-- Next Button -->
             <button id="next-btn" class="btn" disabled>
                 Next
             </button>
 
         </div>
+
 
         <!-- Result Screen -->
         <div id="result-screen" class="screen hidden">
@@ -86,14 +98,15 @@
 
         </div>
 
+
         <!-- Loading / Error Message -->
         <div id="message" class="message hidden"></div>
 
     </div>
+
 
     <script src="script.js"></script>
 
 </body>
 </html>
 ```
-
