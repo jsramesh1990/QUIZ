@@ -23,7 +23,7 @@ const topicFiles = [
     "control-statements",
     "loops",
     "functions",
-    "arrays-strings"
+    "arrays-strings",
     "pointers",
     "strings",
     "structures",
