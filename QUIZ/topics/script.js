@@ -24,6 +24,16 @@ const topicFiles = [
     "loops",
     "functions",
     "arrays-strings"
+    "pointers",
+    "strings",
+    "structures",
+    "unions-enums",
+    "storage-classes",
+    "preprocessor",
+    "dynamic-memory",
+    "file-handling",
+    "bitwise-operations",
+    "command-line-arguments"
 ];
 
 // ------------------------------------------------------------
