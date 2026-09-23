@@ -1,4 +1,3 @@
-```javascript
 // ============================================================
 // C PROGRAMMING QUIZ
 // ============================================================
@@ -8,8 +7,7 @@
 // ------------------------------------------------------------
 
 const DATA_BASE_URL =
-  //  "https://raw.githubusercontent.com/jsramesh1990/C-QUIZ-DATA/main";
-    "https://raw.githubusercontent.com/jsramesh1990/C-QUIZ-DATA/main/questions/c-basics.json";
+    "https://raw.githubusercontent.com/jsramesh1990/C-QUIZ-DATA/main";
 
 // ------------------------------------------------------------
 // Topic list
@@ -71,6 +69,29 @@ const resultMessage = document.getElementById("result-message");
 const message = document.getElementById("message");
 
 // ------------------------------------------------------------
+// Check HTML elements
+// ------------------------------------------------------------
+
+if (
+    !startScreen ||
+    !quizScreen ||
+    !resultScreen ||
+    !startButton ||
+    !nextButton ||
+    !restartButton ||
+    !topicTitle ||
+    !questionNumber ||
+    !scoreDisplay ||
+    !questionText ||
+    !optionsContainer ||
+    !finalScore ||
+    !resultMessage ||
+    !message
+) {
+    console.error("Quiz HTML elements are missing.");
+}
+
+// ------------------------------------------------------------
 // Shuffle function
 // Fisher-Yates shuffle
 // ------------------------------------------------------------
@@ -81,12 +102,12 @@ function shuffle(array) {
 
         const j = Math.floor(Math.random() * (i + 1));
 
-        [array[i], array[j]] = [array[j], array[i]];
+        [array[i], array[j]] =
+            [array[j], array[i]];
     }
 
     return array;
 }
-
 
 // ------------------------------------------------------------
 // Load JSON file
@@ -94,17 +115,19 @@ function shuffle(array) {
 
 async function loadJSON(url) {
 
+    console.log("Loading:", url);
+
     const response = await fetch(url);
 
     if (!response.ok) {
+
         throw new Error(
-            `Failed to load JSON: ${response.status} ${response.statusText}`
+            `Failed to load JSON: ${response.status} ${response.statusText} - ${url}`
         );
     }
 
     return await response.json();
 }
-
 
 // ------------------------------------------------------------
 // Load all topics
@@ -126,8 +149,9 @@ async function loadTopics() {
 
     // Randomize topic order
     shuffle(topics);
-}
 
+    console.log("Topics loaded:", topics);
+}
 
 // ------------------------------------------------------------
 // Load questions for current topic
@@ -141,24 +165,34 @@ async function loadTopicQuestions(topicId) {
     const answerURL =
         `${DATA_BASE_URL}/answers/${topicId}.json`;
 
-    const questionData = await loadJSON(questionURL);
-    const answerData = await loadJSON(answerURL);
+    const questionData =
+        await loadJSON(questionURL);
 
-    const answers = answerData.answers;
+    const answerData =
+        await loadJSON(answerURL);
 
-    currentQuestions = questionData.questions.map(question => {
+    const answers =
+        answerData.answers;
 
-        return {
-            ...question,
-            correctAnswer: answers[String(question.id)]
-        };
+    currentQuestions =
+        questionData.questions.map(question => {
 
-    });
+            return {
+                ...question,
+                correctAnswer:
+                    answers[String(question.id)]
+            };
+
+        });
 
     // Randomize question order
     shuffle(currentQuestions);
-}
 
+    console.log(
+        `Questions loaded for ${topicId}:`,
+        currentQuestions
+    );
+}
 
 // ------------------------------------------------------------
 // Start quiz
@@ -168,39 +202,55 @@ async function startQuiz() {
 
     try {
 
+        console.log("Start Quiz clicked.");
+
         showMessage("Loading quiz...");
 
+        // Reset quiz state
         score = 0;
         currentTopicIndex = 0;
         currentQuestionIndex = 0;
         totalQuestions = 0;
+        currentQuestions = [];
+        currentQuestion = null;
+        selectedAnswer = null;
 
+        // Load all topics
         await loadTopics();
 
-        // Calculate total questions
-        // Each topic normally has 10 questions
-        totalQuestions = topics.length * 10;
+        // Calculate total number of questions
+        totalQuestions =
+            topics.reduce(
+                (total, topic) => total + 10,
+                0
+            );
 
+        // Hide start/result screens
         startScreen.classList.add("hidden");
         resultScreen.classList.add("hidden");
+
+        // Show quiz screen
         quizScreen.classList.remove("hidden");
 
+        // Hide loading message
         hideMessage();
 
-        scoreDisplay.textContent = `Score: ${score}`;
+        // Reset score display
+        scoreDisplay.textContent =
+            `Score: ${score}`;
 
+        // Load first topic
         await loadCurrentTopic();
 
     } catch (error) {
 
-        console.error(error);
+        console.error("Quiz loading error:", error);
 
         showMessage(
-            "Unable to load the quiz. Please check the C-QUIZ-DATA repository."
+            "Unable to load the quiz. Please check the C-QUIZ-DATA repository and JSON files."
         );
     }
 }
-
 
 // ------------------------------------------------------------
 // Load current topic
@@ -215,18 +265,25 @@ async function loadCurrentTopic() {
         return;
     }
 
-    const topic = topics[currentTopicIndex];
+    const topic =
+        topics[currentTopicIndex];
 
-    topicTitle.textContent = topic.title;
+    console.log(
+        "Current topic:",
+        topic
+    );
+
+    topicTitle.textContent =
+        topic.title;
 
     currentQuestionIndex = 0;
 
-    await loadTopicQuestions(topic.id);
+    await loadTopicQuestions(
+        topic.id
+    );
 
     showQuestion();
-
 }
-
 
 // ------------------------------------------------------------
 // Display current question
@@ -238,11 +295,13 @@ function showQuestion() {
 
     nextButton.disabled = true;
 
-    const question = currentQuestions[currentQuestionIndex];
+    const question =
+        currentQuestions[currentQuestionIndex];
 
     currentQuestion = question;
 
-    questionText.textContent = question.question;
+    questionText.textContent =
+        question.question;
 
     questionNumber.textContent =
         `Question ${currentQuestionIndex + 1} of ${currentQuestions.length}`;
@@ -250,37 +309,33 @@ function showQuestion() {
     scoreDisplay.textContent =
         `Score: ${score}`;
 
+    // Clear previous options
     optionsContainer.innerHTML = "";
 
     // --------------------------------------------------------
-    // Convert current options into objects
-    // --------------------------------------------------------
-    //
-    // Original JSON:
-    //
-    // A. int
-    // B. float
-    // C. char
-    // D. double
-    //
-    // We extract the original letter and text.
-    //
+    // Convert options into objects
     // --------------------------------------------------------
 
-    let options = question.options.map(option => {
+    let options =
+        question.options.map(option => {
 
-        const letter = option.charAt(0);
+            const originalLetter =
+                option.charAt(0);
 
-        const text = option.substring(2);
+            const optionText =
+                option.substring(2);
 
-        return {
-            originalLetter: letter,
-            text: text
-        };
+            return {
+                originalLetter: originalLetter,
+                text: optionText
+            };
 
-    });
+        });
 
+    // --------------------------------------------------------
     // Randomize options
+    // --------------------------------------------------------
+
     shuffle(options);
 
     // --------------------------------------------------------
@@ -304,16 +359,15 @@ function showQuestion() {
         button.dataset.answer =
             option.originalLetter;
 
+        // Add click event
         button.addEventListener(
             "click",
             () => selectAnswer(button)
         );
 
         optionsContainer.appendChild(button);
-
     });
 }
-
 
 // ------------------------------------------------------------
 // Select answer
@@ -323,6 +377,7 @@ function selectAnswer(button) {
 
     // Prevent selecting another answer
     if (selectedAnswer !== null) {
+
         return;
     }
 
@@ -332,19 +387,22 @@ function selectAnswer(button) {
     const allOptions =
         document.querySelectorAll(".option");
 
-    // Disable all buttons
+    // Disable all options
     allOptions.forEach(option => {
 
         option.disabled = true;
 
     });
 
-    // Correct answer from answer JSON
+    // Get correct answer
     const correctAnswer =
         currentQuestion.correctAnswer;
 
-    // Check answer
-    if (selectedAnswer === correctAnswer) {
+    // Check selected answer
+    if (
+        selectedAnswer ===
+        correctAnswer
+    ) {
 
         button.classList.add("correct");
 
@@ -354,37 +412,40 @@ function selectAnswer(button) {
 
         button.classList.add("wrong");
 
-        // Find the correct option
+        // Highlight correct answer
         allOptions.forEach(option => {
 
             if (
-                option.dataset.answer === correctAnswer
+                option.dataset.answer ===
+                correctAnswer
             ) {
 
                 option.classList.add("correct");
-
             }
 
         });
-
     }
 
+    // Update score
     scoreDisplay.textContent =
         `Score: ${score}`;
 
+    // Enable Next button
     nextButton.disabled = false;
 }
 
-
 // ------------------------------------------------------------
-// Next button
+// Next question
 // ------------------------------------------------------------
 
 async function nextQuestion() {
 
     currentQuestionIndex++;
 
+    // --------------------------------------------------------
     // More questions in current topic
+    // --------------------------------------------------------
+
     if (
         currentQuestionIndex <
         currentQuestions.length
@@ -395,10 +456,16 @@ async function nextQuestion() {
         return;
     }
 
+    // --------------------------------------------------------
     // Current topic finished
+    // --------------------------------------------------------
+
     currentTopicIndex++;
 
+    // --------------------------------------------------------
     // More topics available
+    // --------------------------------------------------------
+
     if (
         currentTopicIndex <
         topics.length
@@ -410,7 +477,10 @@ async function nextQuestion() {
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "Next topic loading error:",
+                error
+            );
 
             showMessage(
                 "Unable to load the next topic."
@@ -420,10 +490,12 @@ async function nextQuestion() {
         return;
     }
 
+    // --------------------------------------------------------
     // All topics finished
+    // --------------------------------------------------------
+
     showResult();
 }
-
 
 // ------------------------------------------------------------
 // Show final result
@@ -432,6 +504,7 @@ async function nextQuestion() {
 function showResult() {
 
     quizScreen.classList.add("hidden");
+
     resultScreen.classList.remove("hidden");
 
     topicTitle.textContent =
@@ -441,7 +514,9 @@ function showResult() {
         `${score} / ${totalQuestions}`;
 
     const percentage =
-        Math.round((score / totalQuestions) * 100);
+        Math.round(
+            (score / totalQuestions) * 100
+        );
 
     if (percentage >= 80) {
 
@@ -462,10 +537,8 @@ function showResult() {
 
         resultMessage.textContent =
             `Keep learning and try again! You scored ${percentage}%.`;
-
     }
 }
-
 
 // ------------------------------------------------------------
 // Restart quiz
@@ -474,12 +547,9 @@ function showResult() {
 async function restartQuiz() {
 
     resultScreen.classList.add("hidden");
-    quizScreen.classList.remove("hidden");
 
     await startQuiz();
-
 }
-
 
 // ------------------------------------------------------------
 // Show message
@@ -487,11 +557,11 @@ async function restartQuiz() {
 
 function showMessage(text) {
 
-    message.textContent = text;
+    message.textContent =
+        text;
 
     message.classList.remove("hidden");
 }
-
 
 // ------------------------------------------------------------
 // Hide message
@@ -501,7 +571,6 @@ function hideMessage() {
 
     message.classList.add("hidden");
 }
-
 
 // ------------------------------------------------------------
 // Event listeners
@@ -521,5 +590,11 @@ restartButton.addEventListener(
     "click",
     restartQuiz
 );
-```
 
+// ------------------------------------------------------------
+// Script loaded successfully
+// ------------------------------------------------------------
+
+console.log(
+    "C Programming Quiz JavaScript loaded successfully."
+);
